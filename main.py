@@ -141,36 +141,36 @@ class CoffeeSalesAnalyzer:
         }, active_data
 
         # Обчислення інтегралів різними методами — Новодворський Роман
-        def calculate_integrals(self):
-            print("=" * 80)
-            print("ОБЧИСЛЕННЯ ІНТЕГРАЛІВ")
-            print("=" * 80)
-            active_data = self.hourly_data[self.hourly_data['sales_count'] > 0].copy()
-            x = active_data['hour'].values.astype(float)
-            sales = active_data['sales_count'].values.astype(float)
-            revenue = active_data['total_revenue'].values.astype(float)
-            methods = {
-                'Ліві прямокутники': NumericalIntegration.left_rectangle,
-                'Праві прямокутники': NumericalIntegration.right_rectangle,
-                'Середні прямокутники': NumericalIntegration.midpoint_rectangle,
-                'Метод трапецій': NumericalIntegration.trapezoid,
-                'Метод Сімпсона': NumericalIntegration.simpson,
-            }
-            results_list = []
-            for name, func in methods.items():
-                Q = func(x, sales)
-                R = func(x, revenue)
-                results_list.append({'Метод': name, 'Q (обсяг)': Q, 'R (виторг, грн)': R})
-                print(f"{name:25s}: Q = {Q:8.4f}, R = {R:10.2f} грн")
-            x_dense, funcs, _ = self.create_interpolation()
-            if x_dense is not None:
-                f_sales = interp1d(x, sales, kind='cubic', fill_value='extrapolate')
-                f_revenue = interp1d(x, revenue, kind='cubic', fill_value='extrapolate')
-                Q_quad, _ = integrate.quad(f_sales, x.min(), x.max())
-                R_quad, _ = integrate.quad(f_revenue, x.min(), x.max())
-                results_list.append({'Метод': 'SciPy quad (еталон)', 'Q (обсяг)': Q_quad, 'R (виторг, грн)': R_quad})
-                print(f"{'SciPy quad (еталон)':25s}: Q = {Q_quad:8.4f}, R = {R_quad:10.2f} грн\n")
-            self.results['integration'] = pd.DataFrame(results_list)
+    def calculate_integrals(self):
+        print("=" * 80)
+        print("ОБЧИСЛЕННЯ ІНТЕГРАЛІВ")
+        print("=" * 80)
+        active_data = self.hourly_data[self.hourly_data['sales_count'] > 0].copy()
+        x = active_data['hour'].values.astype(float)
+        sales = active_data['sales_count'].values.astype(float)
+        revenue = active_data['total_revenue'].values.astype(float)
+        methods = {
+            'Ліві прямокутники': NumericalIntegration.left_rectangle,
+            'Праві прямокутники': NumericalIntegration.right_rectangle,
+            'Середні прямокутники': NumericalIntegration.midpoint_rectangle,
+            'Метод трапецій': NumericalIntegration.trapezoid,
+            'Метод Сімпсона': NumericalIntegration.simpson,
+        }
+        results_list = []
+        for name, func in methods.items():
+            Q = func(x, sales)
+            R = func(x, revenue)
+            results_list.append({'Метод': name, 'Q (обсяг)': Q, 'R (виторг, грн)': R})
+            print(f"{name:25s}: Q = {Q:8.4f}, R = {R:10.2f} грн")
+        x_dense, funcs, _ = self.create_interpolation()
+        if x_dense is not None:
+            f_sales = interp1d(x, sales, kind='cubic', fill_value='extrapolate')
+            f_revenue = interp1d(x, revenue, kind='cubic', fill_value='extrapolate')
+            Q_quad, _ = integrate.quad(f_sales, x.min(), x.max())
+            R_quad, _ = integrate.quad(f_revenue, x.min(), x.max())
+            results_list.append({'Метод': 'SciPy quad (еталон)', 'Q (обсяг)': Q_quad, 'R (виторг, грн)': R_quad})
+            print(f"{'SciPy quad (еталон)':25s}: Q = {Q_quad:8.4f}, R = {R_quad:10.2f} грн\n")
+        self.results['integration'] = pd.DataFrame(results_list)
 
 """
 Команда 6 — Інтегрування: Оцінка загального виторгу та обсягу продажів магазину
@@ -315,36 +315,36 @@ class CoffeeSalesAnalyzer:
         }, active_data
 
         # Обчислення інтегралів різними методами — Новодворський Роман
-        def calculate_integrals(self):
-            print("=" * 80)
-            print("ОБЧИСЛЕННЯ ІНТЕГРАЛІВ")
-            print("=" * 80)
-            active_data = self.hourly_data[self.hourly_data['sales_count'] > 0].copy()
-            x = active_data['hour'].values.astype(float)
-            sales = active_data['sales_count'].values.astype(float)
-            revenue = active_data['total_revenue'].values.astype(float)
-            methods = {
-                'Ліві прямокутники': NumericalIntegration.left_rectangle,
-                'Праві прямокутники': NumericalIntegration.right_rectangle,
-                'Середні прямокутники': NumericalIntegration.midpoint_rectangle,
-                'Метод трапецій': NumericalIntegration.trapezoid,
-                'Метод Сімпсона': NumericalIntegration.simpson,
-            }
-            results_list = []
-            for name, func in methods.items():
-                Q = func(x, sales)
-                R = func(x, revenue)
-                results_list.append({'Метод': name, 'Q (обсяг)': Q, 'R (виторг, грн)': R})
-                print(f"{name:25s}: Q = {Q:8.4f}, R = {R:10.2f} грн")
-            x_dense, funcs, _ = self.create_interpolation()
-            if x_dense is not None:
-                f_sales = interp1d(x, sales, kind='cubic', fill_value='extrapolate')
-                f_revenue = interp1d(x, revenue, kind='cubic', fill_value='extrapolate')
-                Q_quad, _ = integrate.quad(f_sales, x.min(), x.max())
-                R_quad, _ = integrate.quad(f_revenue, x.min(), x.max())
-                results_list.append({'Метод': 'SciPy quad (еталон)', 'Q (обсяг)': Q_quad, 'R (виторг, грн)': R_quad})
-                print(f"{'SciPy quad (еталон)':25s}: Q = {Q_quad:8.4f}, R = {R_quad:10.2f} грн\n")
-            self.results['integration'] = pd.DataFrame(results_list)
+    def calculate_integrals(self):
+        print("=" * 80)
+        print("ОБЧИСЛЕННЯ ІНТЕГРАЛІВ")
+        print("=" * 80)
+        active_data = self.hourly_data[self.hourly_data['sales_count'] > 0].copy()
+        x = active_data['hour'].values.astype(float)
+        sales = active_data['sales_count'].values.astype(float)
+        revenue = active_data['total_revenue'].values.astype(float)
+        methods = {
+            'Ліві прямокутники': NumericalIntegration.left_rectangle,
+            'Праві прямокутники': NumericalIntegration.right_rectangle,
+            'Середні прямокутники': NumericalIntegration.midpoint_rectangle,
+            'Метод трапецій': NumericalIntegration.trapezoid,
+            'Метод Сімпсона': NumericalIntegration.simpson,
+        }
+        results_list = []
+        for name, func in methods.items():
+            Q = func(x, sales)
+            R = func(x, revenue)
+            results_list.append({'Метод': name, 'Q (обсяг)': Q, 'R (виторг, грн)': R})
+            print(f"{name:25s}: Q = {Q:8.4f}, R = {R:10.2f} грн")
+        x_dense, funcs, _ = self.create_interpolation()
+        if x_dense is not None:
+            f_sales = interp1d(x, sales, kind='cubic', fill_value='extrapolate')
+            f_revenue = interp1d(x, revenue, kind='cubic', fill_value='extrapolate')
+            Q_quad, _ = integrate.quad(f_sales, x.min(), x.max())
+            R_quad, _ = integrate.quad(f_revenue, x.min(), x.max())
+            results_list.append({'Метод': 'SciPy quad (еталон)', 'Q (обсяг)': Q_quad, 'R (виторг, грн)': R_quad})
+            print(f"{'SciPy quad (еталон)':25s}: Q = {Q_quad:8.4f}, R = {R_quad:10.2f} грн\n")
+        self.results['integration'] = pd.DataFrame(results_list)
 
     # Оцінка похибок методів — Катело Настя
     def calculate_errors(self):
@@ -392,5 +392,26 @@ class CoffeeSalesAnalyzer:
             'avg_price': avg_price,
             'high_activity_hours': high_activity['hour'].tolist()
         }
+
+    # Побудова графіків — Войченко Ігор
+    def create_plots(self):
+        print("=" * 80)
+        print("ПОБУДОВА ГРАФІКІВ")
+        print("=" * 80)
+        active_data = self.hourly_data[self.hourly_data['sales_count'] > 0]
+        x = active_data['hour'].values
+        x_dense, funcs_dense, _ = self.create_interpolation()
+        fig = plt.figure(figsize=(16, 12))
+        ax1 = plt.subplot(3, 2, 1)
+        if x_dense is not None:
+            ax1.fill_between(x_dense, funcs_dense['sales'], alpha=0.3, color='steelblue')
+            ax1.plot(x_dense, funcs_dense['sales'], 'b-', linewidth=2)
+        ax1.scatter(x, active_data['sales_count'], color='darkblue', s=100, zorder=5)
+        ax1.set_title('Інтенсивність продажів S(t)')
+        ax1.grid(True, alpha=0.3)
+        plt.tight_layout()
+        plt.savefig('coffee_sales_analysis.png', dpi=300, bbox_inches='tight')
+        print("✓ Графіки збережено: coffee_sales_analysis.png\n")
+
 
 
