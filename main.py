@@ -105,3 +105,19 @@ class CoffeeSalesAnalyzer:
         print(f"✓ Період: {self.df['date'].min()} - {self.df['date'].max()}")
         print(f"✓ Унікальних днів: {self.df['date'].nunique()}")
         print(f"✓ Діапазон цін: {self.df['money'].min():.2f} - {self.df['money'].max():.2f} грн\n")
+
+
+# Групування даних по годинах — Шаповалов Олександр
+    def prepare_hourly_data(self):
+        print("=" * 80)
+        print("АГРЕГАЦІЯ ПОГОДИННИХ ДАНИХ")
+        print("=" * 80)
+        hourly = self.df.groupby('hour').agg({
+            'money': ['sum', 'mean', 'count']
+        }).reset_index()
+        hourly.columns = ['hour', 'total_revenue', 'avg_price', 'sales_count']
+        all_hours = pd.DataFrame({'hour': range(24)})
+        self.hourly_data = all_hours.merge(hourly, on='hour', how='left').fillna(0)
+        print(f"✓ Створено погодинну статистику")
+        print(f"✓ Активних годин: {(self.hourly_data['sales_count'] > 0).sum()}\n")
+
