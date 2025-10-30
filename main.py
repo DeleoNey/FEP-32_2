@@ -79,3 +79,14 @@ class NumericalIntegration:
             integral += (h / 6) * (y[i] + 4 * y[i + 1] + y[i + 2])
         return integral
 
+#---------------------------------------------------------------
+# Головний клас аналізу продажів — Стецик Олег
+#---------------------------------------------------------------
+class CoffeeSalesAnalyzer:
+    """Головний клас для аналізу продажів"""
+
+    def __init__(self, csv_path):
+        self.csv_path = csv_path
+        self.df = None
+        self.hourly_data = None
+        self.results = {}
