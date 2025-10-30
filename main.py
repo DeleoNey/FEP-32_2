@@ -429,3 +429,37 @@ class CoffeeSalesAnalyzer:
 
 
 
+    # Головний звіт команди — Леськів Максим
+    def generate_report(self):
+        print("\n" + "=" * 80)
+        print("ЗВІТ КОМАНДИ 6 - ІНТЕГРУВАННЯ")
+        print("=" * 80 + "\n")
+        self.load_data()
+        self.prepare_hourly_data()
+        self.calculate_integrals()
+        self.calculate_errors()
+        self.analyze_trends()
+        self.create_plots()
+        self.save_results()
+        print("АНАЛІЗ ЗАВЕРШЕНО УСПІШНО\n")
+
+
+#---------------------------------------------------------------
+# Точка входу — Леськів Максим
+#---------------------------------------------------------------
+def main():
+    csv_file = 'data.csv'
+    try:
+        analyzer = CoffeeSalesAnalyzer(csv_file)
+        analyzer.generate_report()
+        plt.show()
+    except FileNotFoundError:
+        print(f"Помилка: Файл '{csv_file}' не знайдено!")
+    except Exception as e:
+        print(f"Помилка: {e}")
+        import traceback
+        traceback.print_exc()
+
+
+if __name__ == "__main__":
+    main()
