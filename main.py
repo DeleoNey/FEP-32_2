@@ -413,5 +413,19 @@ class CoffeeSalesAnalyzer:
         plt.savefig('coffee_sales_analysis.png', dpi=300, bbox_inches='tight')
         print("✓ Графіки збережено: coffee_sales_analysis.png\n")
 
+# Збереження результатів і звіту — Коваль Станіслав
+    def save_results(self):
+        print("=" * 80)
+        print("ЗБЕРЕЖЕННЯ РЕЗУЛЬТАТІВ")
+        print("=" * 80)
+        self.hourly_data.to_csv('results_hourly_data.csv', index=False, encoding='utf-8-sig')
+        self.results['integration'].to_csv('results_integration.csv', index=False, encoding='utf-8-sig')
+        with open('results_summary.txt', 'w', encoding='utf-8') as f:
+            f.write("ПІДСУМКОВИЙ ЗВІТ АНАЛІЗУ ПРОДАЖІВ КАВ'ЯРНІ\n")
+            analytics = self.results['analytics']
+            f.write(f"Пік продажів о {analytics['peak_hour']}:00 ({analytics['peak_sales']} продажів)\n")
+        print("✓ Підсумковий звіт: results_summary.txt\n")
+
+
 
 
