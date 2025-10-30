@@ -367,3 +367,30 @@ class CoffeeSalesAnalyzer:
         print(df_results.to_string(index=False))
         print()
 
+  # Аналіз тенденцій продажів — Ящук Софія
+    def analyze_trends(self):
+        print("=" * 80)
+        print("АНАЛІЗ ТЕНДЕНЦІЙ")
+        print("=" * 80)
+        active_data = self.hourly_data[self.hourly_data['sales_count'] > 0]
+        peak_hour = active_data.loc[active_data['sales_count'].idxmax()]
+        total_sales = self.df['money'].count()
+        total_revenue = self.df['money'].sum()
+        avg_price = total_revenue / total_sales
+        high_activity_threshold = peak_hour['sales_count'] * 0.75
+        high_activity = active_data[active_data['sales_count'] >= high_activity_threshold]
+        print(f"   Пік продажів: {int(peak_hour['hour'])}:00 — {int(peak_hour['sales_count'])} продажів, {peak_hour['total_revenue']:.2f} грн\n")
+        print(f"Інтервали високої активності (>{high_activity_threshold:.0f} продажів/год):")
+        for _, row in high_activity.iterrows():
+            print(f"   {int(row['hour'])}:00 - {int(row['sales_count'])} продажів, {row['total_revenue']:.2f} грн")
+        print()
+        self.results['analytics'] = {
+            'peak_hour': int(peak_hour['hour']),
+            'peak_sales': int(peak_hour['sales_count']),
+            'total_sales': total_sales,
+            'total_revenue': total_revenue,
+            'avg_price': avg_price,
+            'high_activity_hours': high_activity['hour'].tolist()
+        }
+
+
