@@ -121,3 +121,21 @@ class CoffeeSalesAnalyzer:
         print(f"✓ Створено погодинну статистику")
         print(f"✓ Активних годин: {(self.hourly_data['sales_count'] > 0).sum()}\n")
 
+    # Інтерполяція функцій S(t), p(t), R(t) — Припотнюк Влад
+    def create_interpolation(self, dense_points=1000):
+        active_data = self.hourly_data[self.hourly_data['sales_count'] > 0].copy()
+        if len(active_data) < 2:
+            return None, None, None
+        x = active_data['hour'].values
+        sales = active_data['sales_count'].values
+        prices = active_data['avg_price'].values
+        revenue = active_data['total_revenue'].values
+        f_sales = interp1d(x, sales, kind='cubic', fill_value='extrapolate')
+        f_prices = interp1d(x, prices, kind='cubic', fill_value='extrapolate')
+        f_revenue = interp1d(x, revenue, kind='cubic', fill_value='extrapolate')
+        x_dense = np.linspace(x.min(), x.max(), dense_points)
+        return x_dense, {
+            'sales': f_sales(x_dense),
+            'prices': f_prices(x_dense),
+            'revenue': f_revenue(x_dense)
+        }, active_data
