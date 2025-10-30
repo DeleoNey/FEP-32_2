@@ -139,3 +139,35 @@ class CoffeeSalesAnalyzer:
             'prices': f_prices(x_dense),
             'revenue': f_revenue(x_dense)
         }, active_data
+
+        # Обчислення інтегралів різними методами — Новодворський Роман
+        def calculate_integrals(self):
+            print("=" * 80)
+            print("ОБЧИСЛЕННЯ ІНТЕГРАЛІВ")
+            print("=" * 80)
+            active_data = self.hourly_data[self.hourly_data['sales_count'] > 0].copy()
+            x = active_data['hour'].values.astype(float)
+            sales = active_data['sales_count'].values.astype(float)
+            revenue = active_data['total_revenue'].values.astype(float)
+            methods = {
+                'Ліві прямокутники': NumericalIntegration.left_rectangle,
+                'Праві прямокутники': NumericalIntegration.right_rectangle,
+                'Середні прямокутники': NumericalIntegration.midpoint_rectangle,
+                'Метод трапецій': NumericalIntegration.trapezoid,
+                'Метод Сімпсона': NumericalIntegration.simpson,
+            }
+            results_list = []
+            for name, func in methods.items():
+                Q = func(x, sales)
+                R = func(x, revenue)
+                results_list.append({'Метод': name, 'Q (обсяг)': Q, 'R (виторг, грн)': R})
+                print(f"{name:25s}: Q = {Q:8.4f}, R = {R:10.2f} грн")
+            x_dense, funcs, _ = self.create_interpolation()
+            if x_dense is not None:
+                f_sales = interp1d(x, sales, kind='cubic', fill_value='extrapolate')
+                f_revenue = interp1d(x, revenue, kind='cubic', fill_value='extrapolate')
+                Q_quad, _ = integrate.quad(f_sales, x.min(), x.max())
+                R_quad, _ = integrate.quad(f_revenue, x.min(), x.max())
+                results_list.append({'Метод': 'SciPy quad (еталон)', 'Q (обсяг)': Q_quad, 'R (виторг, грн)': R_quad})
+                print(f"{'SciPy quad (еталон)':25s}: Q = {Q_quad:8.4f}, R = {R_quad:10.2f} грн\n")
+            self.results['integration'] = pd.DataFrame(results_list)
