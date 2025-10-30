@@ -90,3 +90,18 @@ class CoffeeSalesAnalyzer:
         self.df = None
         self.hourly_data = None
         self.results = {}
+
+
+ # Завантаження та підготовка даних — Юра Марчак
+    def load_data(self):
+        print("=" * 80)
+        print("ЗАВАНТАЖЕННЯ ДАНИХ")
+        print("=" * 80)
+        self.df = pd.read_csv(self.csv_path)
+        print(f"✓ Завантажено {len(self.df)} записів")
+        self.df['datetime'] = pd.to_datetime(self.df['datetime'])
+        self.df['hour'] = self.df['datetime'].dt.hour
+        self.df['date'] = self.df['datetime'].dt.date
+        print(f"✓ Період: {self.df['date'].min()} - {self.df['date'].max()}")
+        print(f"✓ Унікальних днів: {self.df['date'].nunique()}")
+        print(f"✓ Діапазон цін: {self.df['money'].min():.2f} - {self.df['money'].max():.2f} грн\n")
